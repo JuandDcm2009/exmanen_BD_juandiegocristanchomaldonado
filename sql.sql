@@ -33,24 +33,24 @@ CREATE TABLE `clientes`(
 );
 CREATE TABLE `direciones`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `calle` BIGINT NOT NULL,
-    `carrera` BIGINT NOT NULL,
-    `numero` BIGINT NOT NULL,
+    `calle` VARCHAR(15) NOT NULL,
+    `carrera` VARCHAR(15) NOT NULL,
+    `numero` VARCHAR(15) NOT NULL,
     `id_barrio_fk` BIGINT NOT NULL
 );
 CREATE TABLE `barrios`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `nombre` BIGINT NOT NULL,
+    `nombre` VARCHAR(25) NOT NULL,
     `id_ciudad_fk` BIGINT NOT NULL
 );
 CREATE TABLE `ciudades`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `nombre` BIGINT NOT NULL,
+    `nombre` VARCHAR(50) NOT NULL,
     `id_pais_fk` BIGINT NOT NULL
 );
 CREATE TABLE `paises`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `nombre` BIGINT NOT NULL
+    `nombre` VARCHAR(50) NOT NULL
 );
 CREATE TABLE `pedidos`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -81,7 +81,7 @@ CREATE TABLE `transacciones`(
 );
 CREATE TABLE `autores_libros`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `id_autor_lfk` BIGINT NOT NULL,
+    `id_autor_fk` BIGINT NOT NULL,
     `id_libro_fk` BIGINT NOT NULL
 );
 ALTER TABLE
@@ -105,4 +105,4 @@ ALTER TABLE
 ALTER TABLE
     `clientes` ADD CONSTRAINT `clientes_id_direcion_fk_foreign` FOREIGN KEY(`id_direcion_fk`) REFERENCES `direciones`(`id`);
 ALTER TABLE
-    `autores_libros` ADD CONSTRAINT `autores_libros_id_autor_lfk_foreign` FOREIGN KEY(`id_autor_lfk`) REFERENCES `autores`(`id`);
+    `autores_libros` ADD CONSTRAINT `autores_libros_id_autor_fk_foreign` FOREIGN KEY(`id_autor_fk`) REFERENCES `autores`(`id`);
