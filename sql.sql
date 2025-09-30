@@ -12,7 +12,7 @@ CREATE TABLE `libros`(
         'historia'
     ) NOT NULL,
     `fecha_publicacion` DATETIME NOT NULL,
-    `isbn` BIGINT NOT NULL,
+    `isbn` DECIMAL(10, 2) NOT NULL,
     `precio` BIGINT NOT NULL,
     `cantidad_stock` BIGINT NOT NULL
 );
@@ -27,28 +27,11 @@ CREATE TABLE `autores`(
 CREATE TABLE `clientes`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `nombre` VARCHAR(50) NOT NULL,
-    `corre_electronico` VARCHAR(50) NOT NULL,
+    `correo_electronico` VARCHAR(50) NOT NULL,
     `telefono` VARCHAR(50) NOT NULL,
-    `id_direcion_fk` BIGINT NOT NULL
+    `direcion` VARCHAR(100) NOT NULL
 );
-CREATE TABLE `direciones`(
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `calle` VARCHAR(15) NOT NULL,
-    `carrera` VARCHAR(15) NOT NULL,
-    `numero` VARCHAR(15) NOT NULL,
-    `id_barrio_fk` BIGINT NOT NULL
-);
-CREATE TABLE `barrios`(
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `nombre` VARCHAR(25) NOT NULL,
-    `id_ciudad_fk` BIGINT NOT NULL
-);
-CREATE TABLE `ciudades`(
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `nombre` VARCHAR(50) NOT NULL,
-    `id_pais_fk` BIGINT NOT NULL
-);
-CREATE TABLE `paises`(
+CREATE TABLE `nacionalidad`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `nombre` VARCHAR(50) NOT NULL
 );
@@ -64,10 +47,14 @@ CREATE TABLE `pedidos`(
     ) NOT NULL DEFAULT 'pendiente'
 );
 CREATE TABLE `libros_pedidos`(
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `id_libro_fk` BIGINT NOT NULL,
-    `cantidad` BIGINT NOT NULL
+    `cantidad` BIGINT NOT NULL,
+    `id_pedidos_fk` BIGINT NOT NULL,
+    PRIMARY KEY(`id_libro_fk`)
 );
+ALTER TABLE
+    `libros_pedidos` ADD PRIMARY KEY(`id_pedidos_fk`);
 CREATE TABLE `transacciones`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `id_pedido_fk` BIGINT NOT NULL,
@@ -85,11 +72,7 @@ CREATE TABLE `autores_libros`(
     `id_libro_fk` BIGINT NOT NULL
 );
 ALTER TABLE
-    `libros_pedidos` ADD CONSTRAINT `libros_pedidos_id_libro_fk_foreign` FOREIGN KEY(`id_libro_fk`) REFERENCES `pedidos`(`id_libros_pedido_fk`);
-ALTER TABLE
-    `direciones` ADD CONSTRAINT `direciones_id_barrio_fk_foreign` FOREIGN KEY(`id_barrio_fk`) REFERENCES `barrios`(`id`);
-ALTER TABLE
-    `libros_pedidos` ADD CONSTRAINT `libros_pedidos_id_libro_fk_foreign` FOREIGN KEY(`id_libro_fk`) REFERENCES `libros`(`id`);
+    `libros` ADD CONSTRAINT `libros_id_foreign` FOREIGN KEY(`id`) REFERENCES `libros_pedidos`(`id_libro_fk`);
 ALTER TABLE
     `transacciones` ADD CONSTRAINT `transacciones_id_pedido_fk_foreign` FOREIGN KEY(`id_pedido_fk`) REFERENCES `pedidos`(`id`);
 ALTER TABLE
@@ -97,12 +80,8 @@ ALTER TABLE
 ALTER TABLE
     `autores_libros` ADD CONSTRAINT `autores_libros_id_libro_fk_foreign` FOREIGN KEY(`id_libro_fk`) REFERENCES `libros`(`id`);
 ALTER TABLE
-    `autores` ADD CONSTRAINT `autores_id_nacionalidad_fk_foreign` FOREIGN KEY(`id_nacionalidad_fk`) REFERENCES `paises`(`id`);
+    `autores` ADD CONSTRAINT `autores_id_nacionalidad_fk_foreign` FOREIGN KEY(`id_nacionalidad_fk`) REFERENCES `nacionalidad`(`id`);
 ALTER TABLE
-    `ciudades` ADD CONSTRAINT `ciudades_id_pais_fk_foreign` FOREIGN KEY(`id_pais_fk`) REFERENCES `paises`(`id`);
-ALTER TABLE
-    `barrios` ADD CONSTRAINT `barrios_id_ciudad_fk_foreign` FOREIGN KEY(`id_ciudad_fk`) REFERENCES `ciudades`(`id`);
-ALTER TABLE
-    `clientes` ADD CONSTRAINT `clientes_id_direcion_fk_foreign` FOREIGN KEY(`id_direcion_fk`) REFERENCES `direciones`(`id`);
+    `libros_pedidos` ADD CONSTRAINT `libros_pedidos_id_pedidos_fk_foreign` FOREIGN KEY(`id_pedidos_fk`) REFERENCES `pedidos`(`id`);
 ALTER TABLE
     `autores_libros` ADD CONSTRAINT `autores_libros_id_autor_fk_foreign` FOREIGN KEY(`id_autor_fk`) REFERENCES `autores`(`id`);
